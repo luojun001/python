@@ -1,0 +1,15 @@
+import requests
+import re
+import time
+for i in range(1,2):
+    a_html = "http://www.ygdy8.net/html/gndy/dyzz/list_23_"+str(i)+".html"
+    b_html = requests.get(a_html)
+    b_html.encoding = "gb2312"
+    c_list = re.findall('<a href="(.*?)" class="ulink">', b_html.text)
+    for m in c_list:
+        d_html ="http://www.ygdy8.net" +m
+        e_html = requests.get(d_html)
+        e_html.encoding ="gb2312"
+        ftp = re.findall('<a href="(.*?)">.*?</a></td>',e_html.text)
+        with open('C:\\Users\\骆俊\\Desktop\\12356.txt','a',encoding='utf-8') as f:
+            f.write(ftp[0]+"\n")
