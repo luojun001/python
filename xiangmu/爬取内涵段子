@@ -1,0 +1,13 @@
+ # 爬取内涵段子转化成txt格式文本
+import requests
+import time
+ #获取内容
+timelp =1520494519.0
+while type(timelp )==float or type(timelp) ==int:
+    r = requests.get("http://neihanshequ.com/joke/?is_json=1&app_name=neihanshequ_web&max_time =" + str(timelp))
+    time.sleep(2)
+    for i in range(20):
+        content = r.json()['data']['data'][i]['group']['text']
+        with open("C:\\Users\\骆俊\\Desktop\\12345.txt","a",encoding="utf-8") as f:
+            f.write(content+"\n"+"\n")
+    timelp = r.json()['data']['max_time']
