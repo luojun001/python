@@ -1,0 +1,128 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+class 枪类
+属性
+modal  枪支型号
+damage   枪支伤害
+bullet_count  子弹数量
+方法
+add_bullet(self, count):    添加子弹
+shoot(self, enemy):   # 射击敌人  enemy的实参应该为玩家类创建的对象
+	if 子弹数量 == 0:
+		print(“没有子弹”)
+	else:  
+		减少子弹
+		让敌人受伤    -> enemy.hurt()    枪 -> 玩家
+
+__str__(self):   
+
+
+ class 玩家类
+属性
+name   玩家角色
+gun     玩家持有的枪      gun对应的数据应该为枪类创建的对象
+hp       玩家血量
+方法
+fire(self, enemy)     # 攻击敌人  enemy的实参应该玩家类创建的另一个对象
+	if 没有枪:
+		提示无枪
+	else:
+		if 枪有子弹:
+			使用枪射击敌人  # -> gun.shoot()    玩家->枪
+		else: 
+			使用枪添加子弹  # -> gun.add_bullet()   玩家->枪
+
+hurt(self, enemy_gun_damage)    # 玩家受伤
+	# 根据敌人枪的伤害 来 减血
+	# 提示受伤, 并显示血量
+	# 血量<=0,提示死亡
+
+__str__(self)
+"""
+class Gun:  # 枪类
+    def __init__(self, modal, damage):
+        self.modal = modal  # 型号
+        self.damage = damage  # 伤害
+        self.bullet_count = 30  # 子弹数量
+
+    def add_bullet(self, count):  # 添加子弹
+        # 累加子弹数量
+        self.bullet_count += count
+
+    def shoot(self, enemy):  # 射击敌人
+        if self.bullet_count == 0:  # 没有子弹
+            print("提示: 没有子弹")
+        else:
+            self.bullet_count -= 1  # 减少子弹
+            enemy.hurt(self.damage)  # TODO 让敌人受伤
+
+    def __str__(self):
+        return "型号: %s, 伤害:%d, 子弹数量:%d" % (
+            self.modal, self.damage, self.bullet_count)
+
+# # 测试代码
+# ak47 = Gun("ak47", 60)
+# print(ak47)
+# ak47.add_bullet(10)  # 添加子弹
+# print(ak47)
+# ak47.shoot(None)  # 射击敌人
+# print(ak47)
+
+
+class Player:  # 玩家类
+    def __init__(self, name):
+        self.name = name  # 玩家角色
+        self.gun = None  # 持有的枪
+        self.hp = 100  # 玩家血量
+
+    def fire(self, enemy):  # 攻击敌人
+        if self.gun == None:  # 没有枪
+            print("没有枪, 用眼神杀死他")
+        else:  # 有枪
+            if self.gun.bullet_count > 0:  # 枪是否有子弹
+                self.gun.shoot(enemy)  # 用枪射击敌人
+            else:
+                self.gun.add_bullet(30)
+
+    def hurt(self, enemy_gun_damage):  # 玩家受伤
+        self.hp -= enemy_gun_damage  # 减血
+        if self.hp > 0:
+            print("玩家受伤, 当前血量:%d" % self.hp)
+        else:  # 玩家死亡
+            print("玩家死亡")
+
+    def __str__(self):
+        if self.hp > 0:
+            return "角色:%s, 血量:%d, 枪:%s" % (self.name, self.hp, self.gun)
+        else:
+            return "角色:%s 死亡"
+
+# 测试代码
+ak47 = Gun("ak47", 60)
+print(ak47)
+
+badman = Player("匪徒")
+print(badman)
+policeman = Player("警察")
+policeman.gun = ak47
+print(policeman)
+
+print("攻击匪徒")
+for _ in range(10):
+    policeman.fire(badman)  # 攻击敌人
+
+print("匪徒:%s" % badman)
+print("警察:%s" % policeman)
